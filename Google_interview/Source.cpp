@@ -1,7 +1,7 @@
 #include <iostream>
 
 void Del_matrix(int** matrix, const int rows, const int colomns);
-bool IsBorder(const int const ** matrix, const int i, const int j, const int rows, const int colomns);
+bool IsBorder(int** matrix, const int i, const int j, const int rows, const int colomns, const int from_i, const int from_j);
 
 int main()
 {
@@ -52,12 +52,13 @@ int main()
 	{
 		for (size_t j = 1; j < colomns - 1; j++)
 		{
-			if (matrix[i][j] == 1 && !IsBorder(matrix, i, j, rows, colomns))
+			if (matrix[i][j] == 1 && !IsBorder(matrix, i, j, rows, colomns, -1, -1))
 			{
 				matrix[i][j] = 0;
 			}
 		}
 	}
+	std::cout << std::endl;
 	for (size_t i = 0; i < rows; i++)
 	{
 		for (size_t j = 0; j < colomns; j++)
@@ -79,21 +80,25 @@ void Del_matrix(int** matrix, const int rows, const int colomns)
 	}
 	delete[]matrix;
 }
-bool IsBorder(const int const ** matrix, const int i, const int j, const int rows, const int colomns)
+bool IsBorder(int** matrix, const int i, const int j, const int rows, const int colomns, const int from_i, const int from_j)
 {
-	if (matrix[i - 1][j] == 1 && IsBorder(matrix, i - 1, j, rows, colomns))
+	if (i == 0 || i == rows - 1 || j == 0 || j == colomns - 1)
 	{
 		return true;
 	}
-	if (matrix[i][j + 1] == 1 && IsBorder(matrix, i, j + 1, rows, colomns))
+	if (matrix[i - 1][j] == 1 && !(i - 1 == from_i && j == from_j) && IsBorder(matrix, i - 1, j, rows, colomns, i, j))
 	{
 		return true;
 	}
-	if (matrix[i + 1][j] == 1 && IsBorder(matrix, i + 1, j, rows, colomns))
+	if (matrix[i][j + 1] == 1 && !(i == from_i && j + 1 == from_j) && IsBorder(matrix, i, j + 1, rows, colomns, i, j))
 	{
 		return true;
 	}
-	if (matrix[i][j - 1] == 1 && IsBorder(matrix, i, j - 1, rows, colomns))
+	if (matrix[i + 1][j] == 1 && !(i + 1 == from_i && j == from_j) && IsBorder(matrix, i + 1, j, rows, colomns, i, j))
+	{
+		return true;
+	}
+	if (matrix[i][j - 1] == 1 && !(i == from_i && j - 1 == from_j) && IsBorder(matrix, i, j - 1, rows, colomns, i, j))
 	{
 		return true;
 	}
